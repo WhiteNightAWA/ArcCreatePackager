@@ -6,6 +6,7 @@ import zipfile
 import yaml
 
 # Input #
+PackName = input("Type in the Pack Name: ")
 author = input("Type in the Note Designer: ")
 tempDir, inputDir, outputDir, defaultPng = [os.path.join(os.getcwd(), i) for i in ["temp", "input", "output", "default.png"]]
 
@@ -17,11 +18,13 @@ if author in os.listdir(tempDir):
 else:
     tempFolder = os.path.join(tempDir, author)
 
+directory = f"{author}_{PackName.replace(' ', '')}"f"{author}_{PackName.replace(' ', '')}"
+
 # Init yml #
 index = [
     {
-        "directory": f"{author}_pack",
-        "identifier": f"com.{author}.pack",
+        "directory": directory,
+        "identifier": f"com.{author}.{PackName.replace(' ', '')}.pack",
         "settingsFile": "pack.yml",
         "version": 0,
         "type": "pack"
@@ -30,7 +33,7 @@ index = [
 pack = {
     "imagePath": "pack.png",
     "levelIdentifiers": [],
-    "packName": f"{author} Pack"
+    "packName": PackName
 }
 
 
@@ -49,15 +52,15 @@ with io.open(os.path.join(tempFolder, "index.yml"), "w", encoding="utf8") as out
     yaml.dump(index, outfile, default_flow_style=False, allow_unicode=True)
 
 # Write Pack file #
-os.mkdir(os.path.join(tempFolder, f"{author}_pack"))
-with io.open(os.path.join(tempFolder, f"{author}_pack", "pack.yml"), "w", encoding="utf8") as outfile:
+os.mkdir(os.path.join(tempFolder, directory))
+with io.open(os.path.join(tempFolder, directory, "pack.yml"), "w", encoding="utf8") as outfile:
     yaml.dump(pack, outfile, default_flow_style=False, allow_unicode=True)
 if "pack.png" in os.listdir(inputDir):
-    shutil.copyfile(os.path.join(inputDir, "pack.png"), os.path.join(tempFolder, f"{author}_pack", "pack.png"))
+    shutil.copyfile(os.path.join(inputDir, "pack.png"), os.path.join(tempFolder, directory, "pack.png"))
 else:
-    shutil.copyfile(defaultPng, os.path.join(tempFolder, f"{author}_pack", "pack.png"))
+    shutil.copyfile(defaultPng, os.path.join(tempFolder, directory, "pack.png"))
 
 print("Compressing...")
-shutil.make_archive(os.path.join(outputDir, f"{author}_pack.arcpkg"), 'zip', tempFolder)
+shutil.make_archive(os.path.join(outputDir, f"{directory}.arcpkg"), 'zip', tempFolder)
 
 print("Done.")
