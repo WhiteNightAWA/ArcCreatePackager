@@ -1,6 +1,6 @@
 # ArcCreate Packager <sub>v0.2</sub>
 A small tool to pack mutil song together for ArcCreate.
-
+(I'm not sure that if this violation the rules of ArcCreate... If it do, plz content me to tell me to delete this.)
 ---
 
 ## How to use?
