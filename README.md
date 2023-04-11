@@ -5,6 +5,7 @@ A small tool to pack multi song together for ArcCreate.
 
 ## How to use?
 ## A: Single Mode
+### 0.5. Clone this repository or you can only copy `single.py` and `default/png`, make sure your computer has python installed.
 ### 1. Drop all song file (endswith `.arcpkg`) into `./input` folder.
 #### 1.5. Install package `pyyaml` by using command `pip install pyyaml`.
 ### 2. Run `single.py`.
