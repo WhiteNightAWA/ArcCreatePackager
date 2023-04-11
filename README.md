@@ -6,15 +6,21 @@ A small tool to pack multi song together for ArcCreate.
 ## How to use?
 ## A: Single Mode
 ### 0.5. Clone this repository or you can only copy `single.py` and `default.png`, make sure your computer has Python(>3.7) installed.
-### 1. Drop all song file (endswith `.arcpkg`) into `./input` folder.
+### 1. Copy all song file(endswith `.arcpkg`) into `./input` folder.
 #### 1.5. Install package `pyyaml` by using command `pip install pyyaml`.
 ### 2. Run `single.py`.
 #### 2.5. Drop the image(png) of the pack into `./input` and rename it to `pack.png`, if no image found, `default.png` will be used.
 ### 3. Enter the name of the Note Designer and hit Enter.
-### 4. The pack (endswith `.arcpkg.zip`) will show up in `./output`.
+### 4. The pack (endswith `.arcpkg.zip`) will appear in `./output`.
 ### 5. Import the zip file in ArcCreate App, the Song Pack should appear.
 
-## B: Multi Mode (in process)
+## B: Multi Mode
+### 0.5. Clone this repository or you can only copy `multi.py` and `default.png`, make sure your computer has Python(>3.7) installed.
+### 1. Copy all folder / create a folder which name by the Note Designer and their song file(endswith `.arcpkg`) in that folder. (if you need custom pack image plz also place in that folder (png only))
+#### 1.5. Install package `pyyaml` by using command `pip install pyyaml`.
+### 2. Run `multi.py`.
+### 3. All the pack (endswith `.arcpkg.zip`) will appear in `./output`.
+### 4. Import the zip file in ArcCreate App, the Song Pack should appear.
 
 ---
 ## Remind
