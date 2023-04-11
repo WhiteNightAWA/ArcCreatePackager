@@ -1,5 +1,5 @@
 # ArcCreate Packager <sub>v0.3</sub>
-A small tool to pack multi song together for ArcCreate.
+A small tool to pack multi song together for [ArcCreate](https://github.com/0thElement/ArcCreate).
 (I'm not sure that if this against the rules of ArcCreate... If it do, plz content me to tell me to delete this.)
 ---
 
