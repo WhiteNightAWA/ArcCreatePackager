@@ -1,4 +1,4 @@
-# ArcCreate Packager <sub>v0.1</sub>
+# ArcCreate Packager <sub>v0.2</sub>
 A small tool to pack mutil song together for ArcCreate.
 
 ---
