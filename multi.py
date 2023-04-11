@@ -3,7 +3,6 @@ import io
 import os
 import shutil
 import zipfile
-import yaml
 
 # Input #
 print("Program starting...")
@@ -16,55 +15,53 @@ def makePack(path):
     inputDir = os.path.join(inputDir, path)
 
     author = path
+    PackName = author
 
     # Setting up temp folder #
     if author in os.listdir(tempDir):
         maxF = [int(f.split(":")[1]) for f in os.listdir(tempDir) if (author in f) and (":" in f)]
-        tempFolder = os.path.join(tempDir, f"{author}:{max(maxF)+1 if maxF else '1'}")
+        tempFolder = os.path.join(tempDir, f"{author}:{max(maxF) + 1 if maxF else '1'}")
     else:
         tempFolder = os.path.join(tempDir, author)
 
-    # Init yml #
-    index = [
-        {
-            "directory": f"{author}_pack",
-            "identifier": f"com.{author}.pack",
-            "settingsFile": "pack.yml",
-            "version": 0,
-            "type": "pack"
-        }
-    ]
-    pack = {
-        "imagePath": "pack.png",
-        "levelIdentifiers": [],
-        "packName": f"{author} Pack"
-    }
+    directory = f"{author}_{PackName.replace(' ', '')}"
 
+    # Init yml #
+    index = f"""- directory: {directory}
+      identifier: com.{author}.{PackName.replace(' ', '')}.pack
+      settingsFile: pack.yml
+      version: 0
+      type: pack
+    """
+    levelIdentifiers = ['']
 
     for file in os.listdir(inputDir):
         if file.endswith(".arcpkg"):
             with zipfile.ZipFile(os.path.join(inputDir, file)) as zip_ref:
-                with zip_ref.open("index.yml") as index_ref:
-                    data = yaml.safe_load(index_ref)
-                    pack["levelIdentifiers"].append(data[0]["identifier"])
-                    index.append(data[0])
                 zip_ref.extractall(tempFolder)
+                with open(os.path.join(tempFolder, "index.yml")) as index_ref:
+                    data = index_ref.read()
+                    levelIdentifiers.append(data.split("identifier: ")[1].split()[0])
+                    index += data
 
     # Write YAML file #
     with io.open(os.path.join(tempFolder, "index.yml"), "w", encoding="utf8") as outfile:
-        yaml.dump(index, outfile, default_flow_style=False, allow_unicode=True)
+        outfile.write(index)
+
+    pack = f"""imagePath: pack.png
+    levelIdentifiers:""" + "\n- ".join(levelIdentifiers) + f"\npackName: {PackName}"
 
     # Write Pack file #
-    os.mkdir(os.path.join(tempFolder, f"{author}_pack"))
-    with io.open(os.path.join(tempFolder, f"{author}_pack", "pack.yml"), "w", encoding="utf8") as outfile:
-        yaml.dump(pack, outfile, default_flow_style=False, allow_unicode=True)
+    os.mkdir(os.path.join(tempFolder, directory))
+    with io.open(os.path.join(tempFolder, directory, "pack.yml"), "w", encoding="utf8") as outfile:
+        outfile.write(pack)
     if "pack.png" in os.listdir(inputDir):
-        shutil.copyfile(os.path.join(inputDir, "pack.png"), os.path.join(tempFolder, f"{author}_pack", "pack.png"))
+        shutil.copyfile(os.path.join(inputDir, "pack.png"), os.path.join(tempFolder, directory, "pack.png"))
     else:
-        shutil.copyfile(defaultPng, os.path.join(tempFolder, f"{author}_pack", "pack.png"))
+        shutil.copyfile(defaultPng, os.path.join(tempFolder, directory, "pack.png"))
 
     print(f"Processing {path}...", end="")
-    shutil.make_archive(os.path.join(outputDir, f"{author}_pack.arcpkg"), 'zip', tempFolder)
+    shutil.make_archive(os.path.join(outputDir, f"{directory}.arcpkg"), 'zip', tempFolder)
     print("Done.")
 
 

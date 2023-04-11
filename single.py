@@ -3,7 +3,6 @@ import io
 import os
 import shutil
 import zipfile
-import yaml
 
 # Input #
 PackName = input("Type in the Pack Name: ")
@@ -18,43 +17,39 @@ if author in os.listdir(tempDir):
 else:
     tempFolder = os.path.join(tempDir, author)
 
-directory = f"{author}_{PackName.replace(' ', '')}"f"{author}_{PackName.replace(' ', '')}"
+directory = f"{author}_{PackName.replace(' ', '')}"
 
 # Init yml #
-index = [
-    {
-        "directory": directory,
-        "identifier": f"com.{author}.{PackName.replace(' ', '')}.pack",
-        "settingsFile": "pack.yml",
-        "version": 0,
-        "type": "pack"
-    }
-]
-pack = {
-    "imagePath": "pack.png",
-    "levelIdentifiers": [],
-    "packName": PackName
-}
+index = f"""- directory: {directory}
+  identifier: com.{author}.{PackName.replace(' ', '')}.pack
+  settingsFile: pack.yml
+  version: 0
+  type: pack
+"""
+levelIdentifiers = ['']
 
 
 for file in os.listdir(inputDir):
     if file.endswith(".arcpkg"):
         with zipfile.ZipFile(os.path.join(inputDir, file)) as zip_ref:
-            with zip_ref.open("index.yml") as index_ref:
-                data = yaml.safe_load(index_ref)
-                pack["levelIdentifiers"].append(data[0]["identifier"])
-                index.append(data[0])
-                print(f"Processing {data[0]['directory']}")
             zip_ref.extractall(tempFolder)
+            with open(os.path.join(tempFolder, "index.yml")) as index_ref:
+                data = index_ref.read()
+                levelIdentifiers.append(data.split("identifier: ")[1].split()[0])
+                index += data
+                print(f"Processing {data.split('identifier: ')[1].split()[0]}")
 
 # Write YAML file #
 with io.open(os.path.join(tempFolder, "index.yml"), "w", encoding="utf8") as outfile:
-    yaml.dump(index, outfile, default_flow_style=False, allow_unicode=True)
+    outfile.write(index)
+
+pack = f"""imagePath: pack.png
+levelIdentifiers:""" + "\n- ".join(levelIdentifiers) + f"\npackName: {PackName}"
 
 # Write Pack file #
 os.mkdir(os.path.join(tempFolder, directory))
 with io.open(os.path.join(tempFolder, directory, "pack.yml"), "w", encoding="utf8") as outfile:
-    yaml.dump(pack, outfile, default_flow_style=False, allow_unicode=True)
+    outfile.write(pack)
 if "pack.png" in os.listdir(inputDir):
     shutil.copyfile(os.path.join(inputDir, "pack.png"), os.path.join(tempFolder, directory, "pack.png"))
 else:
