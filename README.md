@@ -24,6 +24,9 @@ put multi folder in `input`, it just kinda run the single mode for every folder(
 ### 4. Import the zip file in ArcCreate App, the Song Pack should appear.
 
 ---
+## TODO
+### - Maybe adding video tutorial later
+
 ## Remind
 ### - You can clear the cache file by delete all files and folders in `./temp`
 ### - Remember to clear the input folder after every time you use it.
